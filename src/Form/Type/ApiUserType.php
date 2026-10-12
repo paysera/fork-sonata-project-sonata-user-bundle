@@ -18,3 +18,5 @@ use Sonata\Form\Type\BaseDoctrineORMSerializationType;
 class ApiUserType extends BaseDoctrineORMSerializationType
 {
 }
+
+class_exists(\Sonata\CoreBundle\Form\Type\BaseDoctrineORMSerializationType::class);

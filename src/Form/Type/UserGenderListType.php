@@ -18,3 +18,5 @@ use Sonata\Form\Type\BaseStatusType;
 class UserGenderListType extends BaseStatusType
 {
 }
+
+class_exists(\Sonata\CoreBundle\Form\Type\BaseStatusType::class);

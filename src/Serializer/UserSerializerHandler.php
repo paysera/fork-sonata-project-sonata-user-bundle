@@ -28,3 +28,5 @@ class UserSerializerHandler extends BaseSerializerHandler
         return 'sonata_user_user_id';
     }
 }
+
+class_exists(\Sonata\CoreBundle\Serializer\BaseSerializerHandler::class);
