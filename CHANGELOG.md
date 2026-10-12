@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [4.1.0](https://github.com/paysera/fork-sonata-project-sonata-user-bundle/compare/4.0.4...4.1.0) - 2026-10-12
 ### Added
 - PHP 8 is allowed: `php ^7.3 || ^8.0`
 - The user to group relation is registered through `sonata-project/doctrine-extensions` when `SonataDoctrineBundle` is registered; with `SonataEasyExtendsBundle` alone it is registered as before
