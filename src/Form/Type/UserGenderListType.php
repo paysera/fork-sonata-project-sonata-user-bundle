@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sonata\UserBundle\Form\Type;
 
-use Sonata\CoreBundle\Form\Type\BaseStatusType;
+use Sonata\Form\Type\BaseStatusType;
 
 class UserGenderListType extends BaseStatusType
 {

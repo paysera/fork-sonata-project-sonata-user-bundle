@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Added
+- PHP 8 is allowed: `php ^7.3 || ^8.0`
+- The user to group relation is registered through `sonata-project/doctrine-extensions` when `SonataDoctrineBundle` is registered; with `SonataEasyExtendsBundle` alone it is registered as before
+
+### Changed
+- Classes of `sonata-project/core-bundle` are replaced by their counterparts in `sonata-project/doctrine-extensions` and `sonata-project/form-extensions`
+- `sonata-project/datagrid-bundle` 3 is allowed
+- `sonata-project/doctrine-extensions` 1.9 or newer is required
+
+### Removed
+- Requirement of `sonata-project/core-bundle` and `sonata-project/easy-extends-bundle`
+- PHP 7.0, 7.1 and 7.2
+
 ## [4.0.4](https://github.com/paysera/fork-sonata-project-sonata-user-bundle/compare/4.0.3...4.0.4) - 2022-01-19
 ### Added
 - Symfony 4.x compatibility

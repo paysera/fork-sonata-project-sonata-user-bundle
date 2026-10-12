@@ -13,15 +13,28 @@ declare(strict_types=1);
 
 namespace Sonata\UserBundle\Tests\Resources;
 
-use Sonata\CoreBundle\Test\XliffValidatorTestCase;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\Loader\XliffFileLoader;
 
-class XliffTest extends XliffValidatorTestCase
+class XliffTest extends TestCase
 {
     /**
-     * @return array List all path to validate xliff
+     * @dataProvider getXliffFiles
      */
-    public function getXliffPaths()
+    public function testXliffFileLoads(string $file, string $locale): void
     {
-        return [[__DIR__.'/../../Resources/translations']];
+        $catalogue = (new XliffFileLoader())->load($file, $locale);
+
+        $this->assertNotEmpty($catalogue->all());
+    }
+
+    public function getXliffFiles(): array
+    {
+        $files = [];
+        foreach (glob(__DIR__.'/../../src/Resources/translations'.'/*.xliff') as $file) {
+            $files[basename($file)] = [$file, explode('.', basename($file))[1]];
+        }
+
+        return $files;
     }
 }

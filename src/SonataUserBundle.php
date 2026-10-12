@@ -43,6 +43,10 @@ class SonataUserBundle extends Bundle
      */
     public function registerFormMapping()
     {
+        if (!class_exists(FormHelper::class)) {
+            return;
+        }
+
         FormHelper::registerFormTypeMapping([
             'fos_user_username' => 'FOS\UserBundle\Form\Type\UsernameFormType',
             'fos_user_profile' => 'FOS\UserBundle\Form\Type\ProfileFormType',

@@ -7,10 +7,10 @@ Installation
 Prerequisites
 -------------
 
-PHP 7 and Symfony 2.8 or 3 are needed to make this bundle work; there are also some Sonata dependencies that need to be installed and configured beforehand:
+PHP 7.3 or newer and Symfony 3.4 or 4 are needed to make this bundle work; there are also some Sonata dependencies that need to be installed and configured beforehand:
 
     - `SonataAdminBundle <https://sonata-project.org/bundles/admin>`_
-    - `SonataEasyExtendsBundle <https://sonata-project.org/bundles/easy-extends>`_
+    - `SonataDoctrineBundle <https://github.com/sonata-project/sonata-doctrine-extensions>`_ (shipped with ``sonata-project/doctrine-extensions``)
 
 You will need to install those in their 2.0 or 3.0 branches. Follow also
 their configuration step; you will find everything you need in their own
@@ -44,9 +44,8 @@ Next, be sure to enable the bundles in your and ``AppKernel.php`` file:
     {
         return array(
             new Sonata\AdminBundle\SonataAdminBundle(),
-            new Sonata\CoreBundle\SonataCoreBundle(),
+            new Sonata\Doctrine\Bridge\Symfony\Bundle\SonataDoctrineBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
-            new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
             // ...
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\UserBundle\SonataUserBundle(),
