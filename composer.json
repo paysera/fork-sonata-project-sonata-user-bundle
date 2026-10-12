@@ -67,7 +67,7 @@
     },
     "autoload-dev": {
         "psr-4": { "Sonata\\UserBundle\\Tests\\": "tests/" }
-    },
+     },
     "config": {
         "sort-packages": true
     },

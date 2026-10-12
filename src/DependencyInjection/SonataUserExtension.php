@@ -220,30 +220,6 @@ class SonataUserExtension extends Extension implements PrependExtensionInterface
     /**
      * @param array $config
      */
-    private function registerSonataDoctrineMapping(array $config): void
-    {
-        foreach ($config['class'] as $class) {
-            if (!class_exists($class)) {
-                return;
-            }
-        }
-
-        DoctrineCollector::getInstance()->addAssociation(
-            $config['class']['user'],
-            'mapManyToMany',
-            OptionsBuilder::createManyToMany('groups', $config['class']['group'])
-                ->addJoinTable($config['table']['user_group'], [[
-                    'name' => 'user_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'CASCADE',
-                ]], [[
-                    'name' => 'group_id',
-                    'referencedColumnName' => 'id',
-                    'onDelete' => 'CASCADE',
-                ]])
-        );
-    }
-
     public function registerDoctrineMapping(array $config)
     {
         foreach ($config['class'] as $type => $class) {
@@ -286,6 +262,30 @@ class SonataUserExtension extends Extension implements PrependExtensionInterface
     {
         $container->setAlias('sonata.user.user_manager', sprintf('sonata.user.%s.user_manager', $managerType));
         $container->setAlias('sonata.user.group_manager', sprintf('sonata.user.%s.group_manager', $managerType));
+    }
+
+    private function registerSonataDoctrineMapping(array $config): void
+    {
+        foreach ($config['class'] as $class) {
+            if (!class_exists($class)) {
+                return;
+            }
+        }
+
+        DoctrineCollector::getInstance()->addAssociation(
+            $config['class']['user'],
+            'mapManyToMany',
+            OptionsBuilder::createManyToMany('groups', $config['class']['group'])
+                ->addJoinTable($config['table']['user_group'], [[
+                    'name' => 'user_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE',
+                ]], [[
+                    'name' => 'group_id',
+                    'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE',
+                ]])
+        );
     }
 
     /**
