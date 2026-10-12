@@ -7,7 +7,7 @@ Installation
 Prerequisites
 -------------
 
-PHP 7.3 or newer and Symfony 3.4 or 4 are needed to make this bundle work; there are also some Sonata dependencies that need to be installed and configured beforehand:
+PHP 7.2 or newer and Symfony 4.3 or 4.4 are needed to make this bundle work; there are also some Sonata dependencies that need to be installed and configured beforehand:
 
     - `SonataAdminBundle <https://sonata-project.org/bundles/admin>`_
     - `SonataDoctrineBundle <https://github.com/sonata-project/sonata-doctrine-extensions>`_ (shipped with ``sonata-project/doctrine-extensions``)

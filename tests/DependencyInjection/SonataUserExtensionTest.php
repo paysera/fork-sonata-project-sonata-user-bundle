@@ -14,8 +14,11 @@ declare(strict_types=1);
 namespace Sonata\UserBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Sonata\Doctrine\Mapper\DoctrineCollector;
+use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector as EasyExtendsDoctrineCollector;
 use Sonata\UserBundle\DependencyInjection\Configuration;
 use Sonata\UserBundle\DependencyInjection\SonataUserExtension;
+use Sonata\UserBundle\Entity\BaseUser;
 use Symfony\Bundle\TwigBundle\DependencyInjection\TwigExtension;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -34,11 +37,48 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
         parent::setUp();
 
         $this->setParameter('kernel.bundles', ['SonataAdminBundle' => true]);
+
+        DoctrineCollector::getInstance()->clear();
+    }
+
+    public function testGroupsRelationIsCollectedForSonataDoctrineByDefault(): void
+    {
+        $this->prependAndLoad();
+
+        $this->assertArrayHasKey(BaseUser::class, DoctrineCollector::getInstance()->getAssociations());
+    }
+
+    public function testGroupsRelationIsCollectedForSonataDoctrineWhenBothMappingBundlesAreRegistered(): void
+    {
+        $this->setParameter('kernel.bundles', [
+            'SonataAdminBundle' => true,
+            'SonataDoctrineBundle' => true,
+            'SonataEasyExtendsBundle' => true,
+        ]);
+
+        $this->prependAndLoad();
+
+        $this->assertArrayHasKey(BaseUser::class, DoctrineCollector::getInstance()->getAssociations());
+    }
+
+    public function testGroupsRelationIsCollectedForEasyExtendsWhenOnlyThatBundleIsRegistered(): void
+    {
+        if (!class_exists(EasyExtendsDoctrineCollector::class)) {
+            $this->markTestSkipped('sonata-project/easy-extends-bundle is not installed.');
+        }
+
+        EasyExtendsDoctrineCollector::getInstance()->clear();
+        $this->setParameter('kernel.bundles', ['SonataAdminBundle' => true, 'SonataEasyExtendsBundle' => true]);
+
+        $this->prependAndLoad();
+
+        $this->assertArrayHasKey(BaseUser::class, EasyExtendsDoctrineCollector::getInstance()->getAssociations());
+        $this->assertArrayNotHasKey(BaseUser::class, DoctrineCollector::getInstance()->getAssociations());
     }
 
     public function testLoadDefault(): void
     {
-        $this->load();
+        $this->prependAndLoad();
 
         $this->assertContainerBuilderHasAlias(
             'sonata.user.user_manager',
@@ -85,7 +125,7 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
 
         $this->container->registerExtension($fakeTwigExtension);
 
-        $this->load();
+        $this->prependAndLoad();
 
         $twigConfigurations = $this->container->getExtensionConfig('twig');
 
@@ -99,7 +139,7 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
 
     public function testTwigConfigParameterIsNotSet(): void
     {
-        $this->load();
+        $this->prependAndLoad();
 
         $twigConfigurations = $this->container->getExtensionConfig('twig');
 
@@ -108,22 +148,22 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
 
     public function testCorrectModelClass(): void
     {
-        $this->load(['class' => ['user' => 'Sonata\UserBundle\Tests\Entity\User']]);
+        $this->prependAndLoad(['class' => ['user' => 'Sonata\UserBundle\Tests\Entity\User']]);
     }
 
     public function testCorrectModelClassWithLeadingSlash(): void
     {
-        $this->load(['class' => ['user' => '\Sonata\UserBundle\Tests\Entity\User']]);
+        $this->prependAndLoad(['class' => ['user' => '\Sonata\UserBundle\Tests\Entity\User']]);
     }
 
     public function testCorrectAdminClass(): void
     {
-        $this->load(['admin' => ['user' => ['class' => '\Sonata\UserBundle\Tests\Admin\Entity\UserAdmin']]]);
+        $this->prependAndLoad(['admin' => ['user' => ['class' => '\Sonata\UserBundle\Tests\Admin\Entity\UserAdmin']]]);
     }
 
     public function testCorrectModelClassWithNotDefaultManagerType(): void
     {
-        $this->load([
+        $this->prependAndLoad([
             'manager_type' => 'mongodb',
             'class' => [
                 'user' => 'Sonata\UserBundle\Tests\Document\User',
@@ -142,7 +182,7 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
 
         $this->expectExceptionMessage('Model class "Foo\User" does not correspond to manager type "orm".');
 
-        $this->load(['class' => ['user' => 'Foo\User']]);
+        $this->prependAndLoad(['class' => ['user' => 'Foo\User']]);
     }
 
     public function testNotCorrespondingModelClass(): void
@@ -153,13 +193,13 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
             'Model class "Sonata\UserBundle\Admin\Entity\UserAdmin" does not correspond to manager type "mongodb".'
         );
 
-        $this->load(['manager_type' => 'mongodb', 'class' => ['user' => 'Sonata\UserBundle\Admin\Entity\UserAdmin']]);
+        $this->prependAndLoad(['manager_type' => 'mongodb', 'class' => ['user' => 'Sonata\UserBundle\Admin\Entity\UserAdmin']]);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getMinimalConfiguration()
+    protected function getMinimalConfiguration(): array
     {
         return (new Processor())->process((new Configuration())->getConfigTreeBuilder()->buildTree(), []);
     }
@@ -167,17 +207,14 @@ final class SonataUserExtensionTest extends AbstractExtensionTestCase
     /**
      * {@inheritdoc}
      */
-    protected function getContainerExtensions()
+    protected function getContainerExtensions(): array
     {
         return [
             new SonataUserExtension(),
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function load(array $configurationValues = []): void
+    private function prependAndLoad(array $configurationValues = []): void
     {
         $configs = [$this->getMinimalConfiguration(), $configurationValues];
 

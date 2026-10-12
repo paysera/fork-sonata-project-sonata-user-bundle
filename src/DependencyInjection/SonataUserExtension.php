@@ -91,10 +91,10 @@ class SonataUserExtension extends Extension implements PrependExtensionInterface
 
         $this->checkManagerTypeToModelTypeMapping($config);
 
-        if (isset($bundles['SonataDoctrineBundle'])) {
-            $this->registerSonataDoctrineMapping($config);
-        } else {
+        if (isset($bundles['SonataEasyExtendsBundle']) && !isset($bundles['SonataDoctrineBundle'])) {
             $this->registerDoctrineMapping($config);
+        } else {
+            $this->registerSonataDoctrineMapping($config);
         }
         $this->configureAdminClass($config, $container);
         $this->configureClass($config, $container);
