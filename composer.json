@@ -47,7 +47,7 @@
         "jms/serializer": "For using the public API methods.",
         "nelmio/api-doc-bundle": "For using the public API methods.",
         "sonata-project/doctrine-orm-admin-bundle": "^3.0",
-        "sonata-project/easy-extends-bundle": "Only while SonataDoctrineBundle is not registered: maps the user to group relation the former way.",
+        "sonata-project/easy-extends-bundle": "For mapping the user groups without SonataDoctrineBundle",
         "sonata-project/google-authenticator": "For google auth user login",
         "sonata-project/seo-bundle": "For SEO breadcrumb block service usage"
     },
@@ -58,6 +58,7 @@
         "sonata-project/block-bundle": "<3.2",
         "sonata-project/core-bundle": "<3.20",
         "sonata-project/doctrine-orm-admin-bundle": "<3.0",
+        "sonata-project/easy-extends-bundle": "<2.2",
         "sonata-project/google-authenticator": "<1.0",
         "sonata-project/seo-bundle": "<2.0"
     },
